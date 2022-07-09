@@ -5,8 +5,6 @@ BUILDER_IMAGE=$(IMAGE)-builder
 
 default: build run
 
-release: build push
-
 build:
 	docker build -t $(IMAGE) .
 
