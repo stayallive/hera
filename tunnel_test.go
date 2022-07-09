@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-    "github.com/spf13/afero"
+	"github.com/spf13/afero"
 )
 
 func newTunnel() *Tunnel {
