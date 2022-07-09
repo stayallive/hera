@@ -165,9 +165,9 @@ func (t *Tunnel) writeConfigFile() error {
 func (t *Tunnel) writeRunFile() error {
 	runLines := []string{
 		"#!/bin/sh",
-		"exec cloudflared --config %s",
+		"exec cloudflared --config %s --name %s",
 	}
-	contents := fmt.Sprintf(strings.Join(runLines[:], "\n"), t.Service.ConfigFilePath())
+	contents := fmt.Sprintf(strings.Join(runLines[:], "\n"), t.Service.ConfigFilePath(), t.Config.Hostname)
 
 	err := afero.WriteFile(fs, t.Service.RunFilePath(), []byte(contents), os.ModePerm)
 	if err != nil {
