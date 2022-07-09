@@ -3,11 +3,11 @@ PWD=$(shell pwd)
 IMAGE=stayallive/hera
 BUILDER_IMAGE=$(IMAGE)-builder
 
-default: image run
+default: build run
 
 release: build push
 
-image:
+build:
 	docker build -t $(IMAGE) .
 
 test:

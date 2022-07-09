@@ -35,7 +35,7 @@ In the event that a container with an active tunnel has been stopped, Hera grace
 
 Hera needs a Cloudflare certificate so it can manage tunnels on your behalf.
 
-1. Download a new certificate by visiting https://www.cloudflare.com/a/warp
+1. Download a new certificate by visiting: https://dash.cloudflare.com/argotunnel
 2. Rename the certificate to match your domain, ending in `.pem`. For example, a certificate for `mysite.com` should be named `mysite.com.pem`.
 3. Move the certificate to a directory that can be mounted as a volume (see [Required Volumes](#required-volumes)).
 

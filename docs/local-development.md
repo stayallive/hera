@@ -6,43 +6,18 @@ The [Makefile](https://github.com/stayallive/hera/blob/master/Makefile) defines 
 
 ## Build Process
 
-Run `make build` (or just `make`) to build a new image with a new Hera binary. `make build` uses the [Dockerfile](https://github.com/stayallive/hera/blob/master/Dockerfile) to first make the binary and then the final image as a  multi-stage build.
-
-You should see output similar to the following:
-
-```
-$ make build
-
-docker build -t hera .
-Sending build context to Docker daemon  796.2kB
-Step 1/14 : FROM golang:latest AS builder
- ---> Using cache
- ---> e1df516eb7cf
-Step 2/14 : WORKDIR /hera
- ---> Using cache
- ---> 9d96328e5d3b
-Step 3/14 : COPY ./hera ./
- ---> Using cache
- ---> 573b822b1d8b
-Step 4/14 : RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /dist/hera
-...
-Step 14/14 : ENTRYPOINT ["/init"]
- ---> Using cache
- ---> 03f8df58ed25
-Successfully built 03f8df58ed25
-Successfully tagged hera:latest
-```
+Run `make build` to build a new image with a new Hera binary. `make build` uses the [Dockerfile](https://github.com/stayallive/hera/blob/master/Dockerfile) to first make the binary and then the final image as a multi-stage build.
 
 ## Running
 
 After a successful build, use the `make run` command to start a container based on the new image.
 
-Note: the `make run` command expects a Docker network as well as a `/certs` folder at the root of the project directory containing your `.pem` files.
+Note: the `make run` command expects a Docker network as well as a `.certs` folder at the root of the project directory containing your `.pem` files.
 
 Create a new network if it doesn't exist already:
 
 ```
-$ docker create network hera
+$ docker network create hera
 ```
 
 Run the container:
