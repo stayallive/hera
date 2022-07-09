@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -13,7 +14,7 @@ const (
 
 func InitLogger(name string) {
 	log := logging.MustGetLogger(name)
-	logPath := filepath.Join(LogDir, name)
+	logPath := filepath.Join(LogDir, fmt.Sprintf("%s.log", name))
 
 	stderrBackend := logging.NewLogBackend(os.Stderr, "", 0)
 	strderrBackendFormat := logging.MustStringFormatter(`[%{level}] %{message}`)
