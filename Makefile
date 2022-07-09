@@ -21,5 +21,5 @@ run:
 tunnel:
 	docker run --rm --label hera.hostname=$(HOSTNAME) --label hera.port=80 --network=hera nginx
 
-push:
-	docker push $(IMAGE):latest
+release:
+	docker buildx build -t $(IMAGE) . --platform=linux/amd64 --push
