@@ -1,35 +1,15 @@
-<img alt="Hera" src="https://s3-us-west-2.amazonaws.com/aschzero-hera/hera.png" width="500px">
+# Hera
 
-### Hera automates the creation of [Argo Tunnels](https://www.cloudflare.com/products/argo-tunnel/) to easily and securely expose your local services to the outside world.
+> Hera automates the creation of [Cloudflare Tunnels](https://www.cloudflare.com/products/tunnel/) to easily and securely expose your local services to the outside world
 
 Hera lets you instantly access services outside of your local network with a custom domain using tunnels and is a more secure alternative than using port forwarding or dynamic DNS.
 
 Hera monitors the state of your configured services to instantly start a tunnel when the container starts. Tunnel processes are also monitored to ensure persistent connections and to restart them in the event of sudden disconnects or shutdowns. Tunnels are automatically restarted when their containers are restarted, or gracefully shutdown if their containers are stopped.
 
-[![Build Status](https://semaphoreci.com/api/v1/aschzero/hera/branches/master/badge.svg)](https://semaphoreci.com/aschzero/hera)
-[![](https://images.microbadger.com/badges/version/aschzero/hera.svg)](https://hub.docker.com/r/aschzero/hera)
+_This repository started as a fork of [aschzero/hera](https://github.com/aschzero/hera), huge thanks to them for the initial work._
 
-----
+## Features
 
-* [Features](#features)
-* [How Hera Works](#how-hera-works)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Obtain a Certificate](#obtain-a-certificate)
-  * [Create a Network](#create-a-network)
-* [Running Hera](#running-hera)
-    * [Required Volumes](#required-volumes)
-    * [Persisting Logs](#persisting-logs)
-  * [Tunnel Configuration](#tunnel-configuration)
-  * [Using Multiple Domains](#using-multiple-domains)
-* [Examples](#examples)
-  * [Subdomains](#subdomains)
-  * [Docker Compose](#docker-compose)
-* [Contributing](#contributing)
-
-----
-
-# Features
 * Continuously monitors the state of your services for automated tunnel creation.
 * Revives tunnels on running containers when Hera is restarted.
 * Uses the s6 process supervisor to ensure active tunnel processes are kept alive.
@@ -37,21 +17,21 @@ Hera monitors the state of your configured services to instantly start a tunnel 
 * Requires a minimal amount of configuration so you can get up and running quickly.
 * Supports multiple Cloudflare domains.
 
-# How Hera Works
+## How Hera Works
 Hera attaches to the Docker daemon to watch for changes in state of your configured containers. When a new container is started, Hera checks that it has the proper configuration as well as making sure the container can receive connections. If it passes the configuration checks, Hera spawns a new process to create a persistent tunnel connection.
 
 In the event that a container with an active tunnel has been stopped, Hera gracefully shuts down the tunnel process.
 
 ℹ️ Hera only monitors the state of containers that have been explicitly configured for Hera. Otherwise, containers and their events are completely ignored.
 
-# Getting Started
-## Prerequisites
+## Getting Started
+### Prerequisites
 
 * Installation of Docker with a client API version of 1.22 or later
 * An active domain in Cloudflare with the Argo Tunnel service enabled
 * A valid Cloudflare certificate (see [Obtain a Certificate](#obtain-a-certificate))
 
-## Obtain a Certificate
+### Obtain a Certificate
 
 Hera needs a Cloudflare certificate so it can manage tunnels on your behalf.
 
@@ -61,7 +41,7 @@ Hera needs a Cloudflare certificate so it can manage tunnels on your behalf.
 
 Hera will look for certificates with names matching your tunnels' hostnames and allows the use of multiple certificates. For more info, see [Using Multiple Domains](#using-multiple-domains).
 
-## Create a Network
+### Create a Network
 
 Hera must be able to connect to your containers and resolve their hostnames before it can create a tunnel. This allows Hera to supply a valid address to Cloudflare during the tunnel creation process.
 
@@ -73,7 +53,7 @@ For example, to create a network named `hera`:
 
 ---
 
-# Running Hera
+## Running Hera
 
 Hera can be started with the following command:
 
@@ -83,15 +63,15 @@ docker run \
   --network=hera \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /path/to/certs:/certs \
-  aschzero/hera:latest
+  stayallive/hera:latest
 ```
 
-## Required Volumes
+### Required Volumes
 
 * `/var/run/docker.sock` – Attaching the Docker daemon as a volume allows Hera to monitor container events.
 * `/path/to/certs` – The directory of your Cloudflare certificates.
 
-## Persisting Logs
+### Persisting Logs
 
 You can optionally mount a volume to `/var/log/hera` to persist the logs on your host machine:
 
@@ -102,12 +82,12 @@ docker run \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /path/to/certs:/certs \
   -v /path/to/logs:/var/log/hera \
-  aschzero/hera:latest
+  stayallive/hera:latest
 ```
 
 ℹ️ Tunnel log files are named according to their hostname and can be found at `/var/log/hera/<hostname>.log`
 
-## Tunnel Configuration
+### Tunnel Configuration
 
 Hera utilizes labels for configuration as a way to let you be explicit about which containers you want enabled. There are only two labels that need to be defined:
 
@@ -144,7 +124,7 @@ time="2018-08-11T08:38:41Z" level=info msg="Route propagating, it may take up to
 ...
 ```
 
-### Stopping Tunnels
+#### Stopping Tunnels
 
 Stopping a container with an active tunnel will trigger it to shut down:
 
@@ -158,7 +138,7 @@ time="2018-08-11T09:00:53Z" level=info msg="Quitting..."
 time="2018-08-11T09:00:53Z" level=info msg="Metrics server stopped"
 ```
 
-## Using Multiple Domains
+### Using Multiple Domains
 
 You can use multiple domains as long as there are certificates for each domain with names matching the base hostname of the tunnel. Names are matched according to the pattern `*.domain.tld` and must be placed in the same directory.
 
@@ -168,9 +148,9 @@ If a certificate with a matching domain cannot be found, it will look for `cert.
 
 ---
 
-# Examples
+## Examples
 
-## Subdomains
+### Subdomains
 
 An example of a tunnel for Kibana pointing to `kibana.mysite.com`:
 
@@ -184,14 +164,14 @@ docker run \
   docker.elastic.co/kibana/kibana:6.2.4
 ```
 
-## Docker Compose
+### Docker Compose
 
 ```yaml
 version: '3'
 
 services:
   hera:
-    image: aschzero/hera:latest
+    image: stayallive/hera:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /path/to/certs:/certs
@@ -210,7 +190,16 @@ networks:
   hera:
 ```
 
-# Contributing
+## Contributing
 
-* If you'd like to contribute to the project, refer to the [contributing documentation](https://github.com/aschzero/hera/blob/master/CONTRIBUTING.md).
-* Read the [Development](https://github.com/aschzero/hera/wiki/Development) wiki for information on how to setup Hera for local development.
+* If you'd like to contribute to the project, refer to the [contributing documentation](https://github.com/stayallive/hera/blob/master/.github/CONTRIBUTING.md).
+* Read the [Development](https://github.com/stayallive/hera/wiki/Development) wiki for information on how to setup Hera for local development.
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability within this package, please send an e-mail to Alex Bouma at `alex+security@bouma.me`. All security vulnerabilities will be swiftly
+addressed.
+
+## License
+
+This package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

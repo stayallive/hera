@@ -1,6 +1,6 @@
 PWD=$(shell pwd)
 
-IMAGE=aschzero/hera
+IMAGE=stayallive/hera
 BUILDER_IMAGE=$(IMAGE)-builder
 
 default: image run

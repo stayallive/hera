@@ -12,13 +12,9 @@ When submitting a pull request:
 3. Update the documentation when changing any user-facing behavior.
 4. Submit your PR
 
-#### Continuous Integration
-
-Hera uses [Semaphore](https://semaphoreci.com/aschzero/hera) to build pull requests. Ensure the build for your PR succeeds and that the tests pass.
-
 ## Reporting Bugs
 
-Report your bug by creating a [new issue](https://github.com/aschzero/hera/issues) in this repository.
+Report your bug by creating a [new issue](https://github.com/stayallive/hera/issues) in this repository.
 
 ### Be Descriptive
 
@@ -37,4 +33,4 @@ Run [golint](https://github.com/golang/lint) against your code until it reports 
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its [MIT License](https://github.com/aschzero/hera/blob/master/LICENSE).
+By contributing, you agree that your contributions will be licensed under its [MIT License](https://github.com/stayallive/hera/blob/master/LICENSE).
