@@ -13,11 +13,23 @@ _This repository started as a fork of [aschzero/hera](https://github.com/aschzer
 * Continuously monitors the state of your services for automated tunnel creation.
 * Revives tunnels on running containers when Hera is restarted.
 * Uses the s6 process supervisor to ensure active tunnel processes are kept alive.
-* Low memory footprint and high performance – services can be accessed through a tunnel within seconds.
+* Low memory footprint and high performance – services can be accessed through a tunnel within seconds.
 * Requires a minimal amount of configuration so you can get up and running quickly.
 * Supports multiple Cloudflare domains.
 
+## Image Registries
+
+Images are available on the following registries:
+
+- [GitHub Container Registry](https://github.com/stayallive/hera/pkgs/container/php) (pull using `ghcr.io/stayallive/hera:latest`)
+- [Docker Hub](https://hub.docker.com/r/stayallive/hera) (pull using `stayallive/hera:latest`)
+
+They are listed as `stayallive/hera` and provides an image for `linux/amd64`.
+
+[![Built with Depot](https://depot.dev/badges/built-with-depot.svg)](https://depot.dev/?utm_source=stayallive)
+
 ## How Hera Works
+
 Hera attaches to the Docker daemon to watch for changes in state of your configured containers. When a new container is started, Hera checks that it has the proper configuration as well as making sure the container can receive connections. If it passes the configuration checks, Hera spawns a new process to create a persistent tunnel connection.
 
 In the event that a container with an active tunnel has been stopped, Hera gracefully shuts down the tunnel process.
@@ -25,6 +37,7 @@ In the event that a container with an active tunnel has been stopped, Hera grace
 ℹ️ Hera only monitors the state of containers that have been explicitly configured for Hera. Otherwise, containers and their events are completely ignored.
 
 ## Getting Started
+
 ### Prerequisites
 
 * Installation of Docker with a client API version of 1.22 or later
@@ -68,7 +81,7 @@ docker run \
 
 ### Required Volumes
 
-* `/var/run/docker.sock` – Attaching the Docker daemon as a volume allows Hera to monitor container events.
+* `/var/run/docker.sock` – Attaching the Docker daemon as a volume allows Hera to monitor container events.
 * `/path/to/certs` – The directory of your Cloudflare certificates.
 
 ### Persisting Logs
